@@ -1,51 +1,50 @@
 /* eslint-disable react/jsx-key */
-"use client";
-import { Item } from "@/types/Item";
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useState, useEffect } from "react";
+"use client";
+import { listReducer } from "@/reducer/listReducer";
+import { Item } from "@/types/Item";
+import { useState, useEffect, useReducer } from "react";
 import { text } from "stream/consumers";
 
 const Page = () => {
-  const [list, setList] = useState<Item[]>([]);
+  const [list, dispatch] = useReducer(listReducer, []);
 
-  const addNewItem = (text: string) => {
-    setList([
-      ...list,
-      {
-        id: list.length,
-        text,
-        done: false,
+  const handleAddClick = () => {
+    dispatch({
+      type: "add",
+      payload: {
+        text: "Novo Item",
       },
-    ]);
+    });
   };
 
-  const editItemText = (id: number, newText: string) => {
-    setList(
-      list.map((t) => {
-        if (t.id === id) {
-          t.text = newText;
-        }
-        return t;
-      })
-    );
-  };
+  dispatch({
+    type: "editText",
+    payload: {
+      id: 2,
+      newText: 'BLA'
+    }
+  })
 
-  const toggleItem = (id:number) => {
-    setList(
-      list.map((t) => {
-        if (t.id === id) {
-         t.done = !t.done
-        }
-        return t;
-      })
-    );
-  }
+  dispatch({
+    type: "remove",
+    payload: {
+      id: 2
+    }
+  })
 
-  const removeItem = (id:number) =>{
-    setList(list.filter(t => t.id !== id ))
-  }
+  dispatch({
+    type: "toggleDone",
+    payload: {
+      id: 2
+    }
+  })
 
-  return <div></div>;
+  return (
+    <div>
+      <button onClick={handleAddClick}>Adicionar</button>
+    </div>
+  );
 };
 
 export default Page;
